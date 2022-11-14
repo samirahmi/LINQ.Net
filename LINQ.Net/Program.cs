@@ -59,11 +59,11 @@ class Program
 {
     static void Main()
     {
-        int[] fibb = { 0, 1, 1, 2, 3, 5 };
+        int[] fibb = { 0, 1, 1, 2, 2, 3, 5 };
         int fibbCount = fibb.Count();
         Console.WriteLine($"Fibb Count : {fibbCount}");
 
-        IEnumerable<int> distinctFibb = fibb.Distinct();
+        IEnumerable<int> distinctFibb = fibb.Distinct(); //SELECT DISTINCT Fields....
         foreach(var dis in distinctFibb)
         {
             Console.WriteLine($"{dis}");
