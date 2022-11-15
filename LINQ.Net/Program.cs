@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.Metrics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 
 //class Program
 //{
@@ -369,20 +371,350 @@ using System.Security.Cryptography;
 
 // CONVERTION LINQ
 // =======================================================================================
-//
+// CONVERSI ARRAY LIST KE COLLECTION LIST (list marupakan implemntasi IEnumerable)
+//class Program
+//{
+//    static void Main()
+//    {
+//        // Array String
+//        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Korea Selatan",
+//           "Poland", "Qatar", "Japan" }; 
+
+//        //List<string> result = countries.ToList(); // mengkonversi string array (string) menjadi collection LIST (count)
+//        List<string> result = (from x in countries select x).ToList();
+//        foreach(var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        List<string> countries = new List<string>();
+//        countries.Add("Japan");
+//        countries.Add("USA");
+//        countries.Add("NKRI");
+//        countries.Add("Argentina");
+//        countries.Add("Polandia");
+//        countries.Add("Swiss");
+
+//        //  ----------------------------------------------------------> mengubah List collection menjadi ARRAY (string)
+//        string[] result = (from x in countries select x).ToArray();
+//        foreach(var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Employee
+//{
+//    public string Name { get; set; }
+//    public string Department { get; set; }
+//    public string Country { get; set; }
+//}
+
+// =======================================================================================
+// ELEMENT LINQ
+// =======================================================================================
+//// FISRT | FIRSTORDEFAULT --> mengmabil 1 row pada sequence meskipun return nya lebih dari satu sequence
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] objs = { 1, 2, 1, 3, 4, 6, 7, 8 };
+//        //int result = (from x in objs select x).First(); // ---> untuk mengambil element pertama pada list, array, atau collection lainnya walupun banyak nilai yang sama
+//        int result = (from x in objs select x).FirstOrDefault(w => w == 1); // -----> FirstOfDefault dapat mencari value int ynag ingin di cari/ jika sequence nya NULL akan mengembalikan nilai nol
+//        Console.WriteLine(result);
+//    }
+//}
+
+// SINGLE | SINGLEORDEFAULT ---> mengambil 1 row HANYA pada 1 sequence (tidak ada yang lebih), ketika return ny multi dia akan error
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] objs = { 1, 2, 1, 3, 4, 6, 7, 8 };
+//        //int result = (from x in objs select x).Single(w => w == 2); // ---> untuk mengambil element pada list, array, atau collection lainnya dan HARUS DIBUAT RETURN/NILAI Yang ingin diambil
+//        int result = (from x in objs select x).SingleOrDefault(w => w == 4); // -----> FirstOfDefault dapat mencari value int ynag ingin di cari
+//        Console.WriteLine(result);
+//    }
+//}
+
+// ----------------------------------
+// LAST | LASTORDEFAULT
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] objs = { 1, 2, 1, 3, 4, 6, 7, 8 };
+//        int result = (from x in objs select x).Last(); // ---> mangembalikan last sequence, akan terjadi error jika sequence = NULL/KOSONG {}
+//        int resultLoD = (from x in objs select x).LastOrDefault(); // -----> mengembalikan last sequence, akan return default value (0) jika sequence = NULL/KOSONG
+//        Console.WriteLine(result);
+//    }
+//}
+
+// ------------------------------------
+// DEFAULTIFEMPTY
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] objA = { 1, 2, 3, 4, 5, 6, 7, 8 };
+//        int[] objB = { };
+
+//        var resultA = objA.DefaultIfEmpty();
+//        var resultB = objB.DefaultIfEmpty();
+
+//        Console.WriteLine("List dengan Nilai");
+//        foreach (var x in resultA)
+//        {
+//            Console.WriteLine($"{x}");
+//        }
+
+//        Console.WriteLine("\nList tanpa Nilai");
+//        foreach (var y in resultB)
+
+//        {
+//            Console.WriteLine($"{y}");
+//        }
+//    }
+//}
+
+// =======================================================================================
+// GROUP ELEMENT 
+// =======================================================================================
+// ---> ToLOOKUP
+//class Program
+//{
+//    static void Main()
+//    {
+//        List<Employee> employees = new List<Employee>()
+//        {
+//            new Employee(){ Name = "Anton", Department = "Marketing", Country = "UK" },
+//            new Employee(){ Name = "Andik", Department = "HR", Country = "USA" },
+//            new Employee(){ Name = "Madara", Department = "IT", Country = "Japan" },
+//            new Employee(){ Name = "Naruto", Department = "Marketing", Country = "USA" },
+//            new Employee(){ Name = "Shoyo", Department = "IT", Country = "Indonesia" },
+//            new Employee(){ Name = "Tanaka", Department = "HR", Country = "UK" },
+//            new Employee(){ Name = "Kageyama", Department = "Sales", Country = "USA" },
+//            new Employee(){ Name = "Ryu", Department = "Sales", Country = "Polandia" },
+//        };
+
+//        var empLookup = employees.OrderBy(x => x.Department).ToLookup(x => x.Department);
+//        Console.WriteLine("Group Employee by Department");
+//        Console.WriteLine("----------------------------");
+//        foreach (var dept in empLookup)
+//        {
+//            Console.WriteLine($"\n{dept.Key}");
+//            foreach (var emp in empLookup[dept.Key])
+//            {
+//                Console.WriteLine($"{emp.Name} - {emp.Department} - {emp.Country}");
+//            }
+//        }
+//    }
+//}
+
+// =======================================================================================
+// GROUP ELEMENT LINQ
+// =======================================================================================
+// 
+//class Program
+//{
+//    static void Main()
+//    {
+//        List<Student> students = new List<Student>()
+//        {
+//            new Student(){ Name = "Sami", Gender = "Female", City = "Bukittinggi" },
+//            new Student(){ Name = "Hanafi", Gender = "Male", City = "Garut" },
+//            new Student(){ Name = "Hinata", Gender = "Female", City = "Konoha" },
+//            new Student(){ Name = "Rafif", Gender = "Male", City = "Tangsel" },
+//            new Student(){ Name = "Sakura", Gender = "Female", City = "KOnoha" },
+//            new Student(){ Name = "Syaiful", Gender = "Male", City = "Tangsel" },
+//        };
+
+//        // SELECT * FROM Student GROUP BY Gender
+//        var studentGroup = from student in students
+//                           group student by student.Gender;
+
+//        foreach(var studentItem in studentGroup)
+//        {
+//            Console.WriteLine($"\n{studentItem.Key}");
+//            foreach(var stud in studentItem)
+//            {
+//                Console.WriteLine($"{stud.Name} - {stud.Gender} - {stud.City}");
+//            }
+//        }
+//    }
+//}
+
+//class Student
+//{
+//    public string Name { get; set; }
+//    public string Gender { get; set; }
+//    public string City { get; set; }
+//}
+
+
+// =======================================================================================
+// LOAD XML ke LINQ 
+// =======================================================================================
+//class Program
+//{
+//    static void Main()
+//    {
+//        var xml = @"
+//                    <ingredients>
+//                        <ingredient name='Milk' quantity= '200' price='2500' />
+//                        <ingredient name='Sugar' quantity= '200' price='2500' />
+//                        <ingredient name='Bread' quantity= '500' price='2500' />
+//                        <ingredient name='Salt' quantity= '200' price='2500' />
+//                    </ingredients>
+//                    ";
+
+//        XElement xElement = XElement.Parse(xml);
+
+//        XElement Food = xElement.Descendants("ingredient")
+//            .First(x => x.Attribute("name").Value == "Bread");
+
+//        XAttribute nameAttribute = Food.FirstAttribute;
+//        XAttribute priceAttribute = Food.Attribute("price");
+//        string priceMilk = priceAttribute.Value;
+//        XAttribute qty = Food.Attributes().Skip(1).First();
+
+//        Console.Write(qty);
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        Ingredient[] ingredients =
+//        {
+//            new Ingredient{Name = "Sugar", Calories = 500},
+//            new Ingredient{Name = "Egg", Calories = 100},
+//            new Ingredient{Name = "Milk", Calories = 150},
+//            new Ingredient{Name = "Flour", Calories = 50},
+//            new Ingredient{Name = "Butter", Calories = 200},
+//            new Ingredient{Name = "Milk", Calories = 500},
+//        };
+
+
+//        // SELECT Name FROM Ingredient WHERE Calories >= 150 ORDER BY Name
+//        IEnumerable<string> ingredient = ingredients.Where(x => x.Calories >= 150)
+//                                            .OrderBy(x => x.Name)
+//                                            .Select(x => x.Name); // Hanya mengambil Field Nama
+
+//        foreach(var IngName in ingredient)
+//        {
+//            Console.WriteLine(IngName);
+//        }    
+//    }
+//}
+
+//class Ingredient
+//{
+//    public string Name { get; set; }
+//    public int Calories { get; set; }
+//}
+
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        Ingredient[] ingredients =
+//        {
+//            new Ingredient{Name = "Sugar", Calories = 500},
+//            new Ingredient{Name = "Egg", Calories = 100},
+//            new Ingredient{Name = "Milk", Calories = 150},
+//            new Ingredient{Name = "Flour", Calories = 50},
+//            new Ingredient{Name = "Butter", Calories = 200},
+//        };
+
+//        // SELECT OriginalIngredient = 1, IsDairy (CASE WHEN Name = Milk dst), IsHighCalories = Calories >= 150
+//        // INTO Temp FROM Ingredient WHERE IsDairy AND IsHighCalories
+
+//        IEnumerable<Ingredient> hiCalorie =
+//            from i in ingredients
+//            select new
+//            {
+//                OriginalIngredient = i,
+//                //IsDairy = i.Name == "Milk" || i.Name == "Butter",
+//                IsHIghCalorie = i.Calories >= 150
+//            }
+//            into temp
+//            where temp.IsHIghCalorie
+//            select temp.OriginalIngredient;
+
+//        foreach (var ingredient in hiCalorie)
+//        {
+//            Console.WriteLine(ingredient.Name);
+//        }
+
+//    }
+//}
+
+//class Ingredient
+//{
+//    public string Name { get; set; }
+//    public int Calories { get; set; }
+//}
+
+
+// =======================================================================================
+// QUERY JOIN atau INNER JOIN pada LINQ
+// =======================================================================================
+
 class Program
 {
     static void Main()
     {
-        // Array String
-        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Korea Selatan",
-           "Poland", "Qatar", "Japan" }; 
-
-        //List<string> result = countries.ToList(); // mengkonversi array list menjadi collection string
-        List<string> result = (from x in countries select x).ToList();
-        foreach(var country in result)
+        Recipe[] recipes =
         {
-            Console.WriteLine(country);
+            new Recipe {Id = 1, Name = "Mashed Potato"},
+            new Recipe {Id = 2, Name = "Rendang"},
+            new Recipe {Id = 3, Name = "Sayur Anyang"}
+        };
+
+        Review[] reviews =
+        {
+            new Review {RecipeId = 1, ReviewText = "Tasty!"},
+            new Review {RecipeId = 2, ReviewText = "Bad :("},
+            new Review {RecipeId = 2, ReviewText = "Terlalu Asin"},
+            new Review {RecipeId = 1, ReviewText = "Loved it!"},
+            new Review {RecipeId = 3, ReviewText = "Loved it!"}
+        };
+
+        // SELECT RecipeName, RecipeReview FROM Recipe
+        // JOIN Review ON Recipe.Id = Review.RecipeId
+        var query = from recipe in recipes
+                    join review in reviews on recipe.Id equals review.RecipeId
+                    select new // SELECT Fields
+                    {
+                        RecipeName = recipe.Name,
+                        RecipeReview = review.ReviewText
+                    };
+
+        foreach (var item in query)
+        {
+            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
         }
     }
+}
+
+class Recipe
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+
+class Review
+{
+    public int RecipeId { get; set; }
+    public string ReviewText { get; set; }
 }
