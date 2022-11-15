@@ -132,32 +132,118 @@ using System.Linq.Expressions;
 
 // AGGREGATE pada LINQ Sum, Max, Count, Min, Avg
 // ===========================================================
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] nums = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+//        int total = 0;
+//        for (int i =0; i < nums.Length; i++)
+//        {
+//            total = total + nums[i]; // SUM menggunakan loop
+//        }
+//        Console.WriteLine($"LOOP = {total}");
+
+//        int sum = nums.Sum(); // Sum Menggunakan LINQ
+//        Console.WriteLine($"LINQ = {sum}");
+
+//        double result = total / nums.Length; // AVERAGE menggunkan loop
+//        Console.WriteLine($"AVG LOOP = {result}");
+
+//        double avg = nums.Average(); // AVERAGE MENGGUNAKAN LINQ
+//        Console.WriteLine($"AVG LINQ = {avg}");
+
+//        int min = nums.Min();
+//        Console.WriteLine($"Min = {min}");
+//        int max = nums.Max();
+//        Console.WriteLine($"Max = {max}");
+//        int count = nums.Count();
+//        Console.WriteLine($"Count = {count}");
+//    }
+//}
+
+// PEINTAH SORTING PADA LINQ || SORTING, BUBBLE SORT, INSERTIONSORT, QUICKSORT, MERGESORT
+// =======================================================================================
+// CONTOH 1
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        int[] nums = { 8, 6, 4, 9, 3, 11, 3, 5 };
+//        //var sortNumbers = nums.OrderBy(x => x); // Order ASC
+//        var sortNumbers = nums.OrderByDescending(x => x); // ORDER DESC
+//        foreach(var sortnumber in sortNumbers)
+//        {
+//            Console.WriteLine(sortnumber);
+//        }
+
+//        List<Student> students = new List<Student>()
+//        {
+//            new Student() { Name = "Sami", Gender = "Female", Subject = new List<string> { "C# Fundamental", "Calculus" } },
+//            new Student() { Name = "Garaa", Gender = "Male", Subject = new List<string> { "C# Fundamental", "Calculus" } },
+//            new Student() { Name = "Ryu", Gender = "Male", Subject = new List<string> { "C# Fundamental", "Calculus" } }
+//        };
+
+//        Console.WriteLine("\nBefore Order Sort");
+//        foreach (var student in students)
+//        {
+//            Console.WriteLine(student.Name);
+//        }
+
+//        //var studentOrder = students.OrderBy(x => x.Name); // Order ASC
+//        var studentOrder = students.OrderByDescending(x => x.Name); // Order DESC
+//        Console.WriteLine("\nAfter Order Sort");
+//        foreach (var student in studentOrder)
+//        {
+//            Console.WriteLine(student.Name);
+//        }
+//    }
+//}
+
+//class Student
+//{
+//    public string Name { get; set; }
+
+//    public string Gender { get; set; }
+
+//    public List<string> Subject { get; set; }
+//}
+
+// CONTOH 2
 class Program
 {
     static void Main()
     {
-        int[] nums = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        int total = 0;
-        for (int i =0; i < nums.Length; i++)
+        List<Student> students = new List<Student>()
         {
-            total = total + nums[i]; // SUM menggunakan loop
+            new Student(){ StudentId = 1, Name = "Sami", Gender = "Female", 
+                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+            new Student(){ StudentId = 1, Name = "Garaa", Gender = "Male", 
+                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+            new Student(){ StudentId = 3, Name = "Kabuto", Gender = "Male",
+                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+            new Student(){ StudentId = 2, Name = "Raya", Gender = "Female",
+                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+            new Student(){ StudentId = 2, Name = "Didit", Gender = "Female",
+                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+        };
+
+        // Sorting berdasarkan studentId, dilanjut oleh ThenBy yang diurutkan ASC / ThenByDescending diurutkan DESC
+        // SELECT * FROM Student Order by StudentId AND Name
+        var studentSorted = students.OrderBy(x => x.StudentId).ThenBy(x => x.Name);
+        //var studentSorted = students.OrderByDescending(x => x.StudentId).ThenByDescending(x => x.Name);
+        foreach (var student in studentSorted)
+        {
+            Console.WriteLine($"{student.StudentId} - {student.Name} - {student.Subject[0]} - {student.Subject[1]}");
         }
-        Console.WriteLine($"LOOP = {total}");
-
-        int sum = nums.Sum(); // Sum Menggunakan LINQ
-        Console.WriteLine($"LINQ = {sum}");
-
-        double result = total / nums.Length; // AVERAGE menggunkan loop
-        Console.WriteLine($"AVG LOOP = {result}");
-
-        double avg = nums.Average(); // AVERAGE MENGGUNAKAN LINQ
-        Console.WriteLine($"AVG LINQ = {avg}");
-
-        int min = nums.Min();
-        Console.WriteLine($"Min = {min}");
-        int max = nums.Max();
-        Console.WriteLine($"Max = {max}");
-        int count = nums.Count();
-        Console.WriteLine($"Count = {count}");
     }
+}
+
+class Student
+{
+    public int StudentId { get; set; } 
+    public string Name { get; set; }
+    public string Gender { get; set; }
+    public List<string> Subject { get; set; }
 }
