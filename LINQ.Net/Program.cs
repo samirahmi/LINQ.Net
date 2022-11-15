@@ -366,3 +366,23 @@ using System.Security.Cryptography;
 //        }
 //    }
 //}
+
+// CONVERTION LINQ
+// =======================================================================================
+//
+class Program
+{
+    static void Main()
+    {
+        // Array String
+        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Korea Selatan",
+           "Poland", "Qatar", "Japan" }; 
+
+        //List<string> result = countries.ToList(); // mengkonversi array list menjadi collection string
+        List<string> result = (from x in countries select x).ToList();
+        foreach(var country in result)
+        {
+            Console.WriteLine(country);
+        }
+    }
+}
