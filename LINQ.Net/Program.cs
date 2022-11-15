@@ -112,6 +112,8 @@ using System.Xml.Linq;
 //}
 
 
+// COLLECTION pada LINQ
+// ===========================================================
 //class Program
 //{
 //    static void Main()
@@ -670,51 +672,285 @@ using System.Xml.Linq;
 // QUERY JOIN atau INNER JOIN pada LINQ
 // =======================================================================================
 
+//class Program
+//{
+//    static void Main()
+//    {
+//        Recipe[] recipes =
+//        {
+//            new Recipe {Id = 1, Name = "Mashed Potato"},
+//            new Recipe {Id = 2, Name = "Rendang"},
+//            new Recipe {Id = 3, Name = "Sayur Anyang"}
+//        };
+
+//        Review[] reviews =
+//        {
+//            new Review {RecipeId = 1, ReviewText = "Tasty!"},
+//            new Review {RecipeId = 2, ReviewText = "Bad :("},
+//            new Review {RecipeId = 2, ReviewText = "Terlalu Asin"},
+//            new Review {RecipeId = 1, ReviewText = "Loved it!"},
+//            new Review {RecipeId = 3, ReviewText = "Loved it!"}
+//        };
+
+//        // SELECT RecipeName, RecipeReview FROM Recipe
+//        // JOIN Review ON Recipe.Id = Review.RecipeId
+//        var query = from recipe in recipes
+//                    join review in reviews on recipe.Id equals review.RecipeId
+//                    select new // SELECT Fields
+//                    {
+//                        RecipeName = recipe.Name,
+//                        RecipeReview = review.ReviewText
+//                    };
+
+//        foreach (var item in query)
+//        {
+//            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
+//        }
+//    }
+//}
+
+//class Recipe
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//}
+
+//class Review
+//{
+//    public int RecipeId { get; set; }
+//    public string ReviewText { get; set; }
+//}
+
+// =======================================================================================
+// LEFT JOIN pada LINQ DAN MENGAMBIL KONDISI EMPTY
+// =======================================================================================
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        Recipe[] recipes =
+//        {
+//            new Recipe {Id = 1, Name = "Mashed Potato"},
+//            new Recipe {Id = 2, Name = "Rendang"},
+//            new Recipe {Id = 3, Name = "Anyang"}
+//        };
+
+//        Review[] reviews =
+//        {
+//            new Review {RecipeId = 1, ReviewText = "Tasty!"},
+//            new Review {RecipeId = 2, ReviewText = "Bad :("},
+//            new Review {RecipeId = 2, ReviewText = "Terlalu Asin"},
+//            new Review {RecipeId = 1, ReviewText = "Loved it!"},
+//        };
+
+//        var query = from recipe in recipes
+//                    join review in reviews
+//                    on recipe.Id equals review.RecipeId into ReviewGroup
+//                    from rg in ReviewGroup.DefaultIfEmpty()
+//                    select new 
+//                    {
+//                        RecipeName = recipe.Name,
+//                        RecipeReview = rg == null ? "No Review" : rg.ReviewText
+//                    };
+
+//        foreach (var item in query)
+//        {
+//            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
+//        }
+//    }
+//}
+
+//class Recipe
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//}
+
+//class Review
+//{
+//    public int RecipeId { get; set; }
+//    public string ReviewText { get; set; }
+//}
+
+// =======================================================================================
+// CROSS JOIN == menampilkan semua record yang ada
+// =======================================================================================
+//class Program
+//{
+//    static void Main()
+//    {
+//        Recipe[] recipes =
+//        {
+//            new Recipe {Id = 1, Name = "Tanak Lado"},
+//            new Recipe {Id = 2, Name = "Rendang"},
+//            new Recipe {Id = 3, Name = "Anyang"}
+//        };
+
+//        Review[] reviews =
+//        {
+//            new Review {RecipeId = 1, ReviewText = "Tasty!"},
+//            new Review {RecipeId = 2, ReviewText = "Bad :("},
+//            new Review {RecipeId = 2, ReviewText = "Salty!"},
+//            new Review {RecipeId = 1, ReviewText = "Loved it!"},
+//        };
+
+//        // SELECT RecipeName, ReviewText FROM Recipes CROSS JOIN (Reviews)
+//        // SELECT RecipeName, REviewText FROM Recipes, Reviews
+//        var query = from recipe in recipes
+//                    from review in reviews
+//                    select new
+//                    {
+//                        RecipeName = recipe.Name,
+//                        RecipeReview = review.ReviewText
+//                    };
+
+//        foreach (var item in query)
+//        {
+//            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
+//        }
+//    }
+//}
+
+//class Recipe
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//}
+
+//class Review
+//{
+//    public int RecipeId { get; set; }
+//    public string ReviewText { get; set; }
+//}
+
+// =======================================================================================
+// RIGHT JOIN  == tinggal di switch datasetnya dari LEFT JOIN
+// =======================================================================================
+//class Program
+//{
+//    static void Main()
+//    {
+//        Recipe[] recipes =
+//        {
+//            new Recipe {Id = 1, Name = "Tanak Lado"},
+//            new Recipe {Id = 2, Name = "Rendang"},
+//            new Recipe {Id = 3, Name = "Anyang"}
+//        };
+
+//        Review[] reviews =
+//        {
+//            new Review {RecipeId = 4, ReviewText = "Tasty!"},
+//            new Review {RecipeId = 2, ReviewText = "Bad :("},
+//            new Review {RecipeId = 3, ReviewText = "Salty!"},
+//            new Review {RecipeId = 1, ReviewText = "Loved it!"},
+//        };
+
+//        // SELECT RecipeName, ReviewText FROM Review
+//        // RIGHT JOIN Recipe ON Review.RecipeId = Recipe.Id
+//        var query = from review in reviews
+//                    join recipe in recipes
+//                    on review.RecipeId equals recipe.Id into RecipeGroup
+//                    from rg in RecipeGroup.DefaultIfEmpty()
+//                    select new
+//                    {
+//                        RecipeName = rg == null ? "No Recipe" : rg.Name,
+//                        RecipeReview = review.ReviewText,
+//                    };
+
+//        foreach (var item in query)
+//        {
+//            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
+//        }
+//    }
+//}
+
+//class Recipe
+//{
+//    public int Id { get; set; }
+//    public string Name { get; set; }
+//}
+
+//class Review
+//{
+//    public int RecipeId { get; set; }
+//    public string ReviewText { get; set; }
+//}
+
+// =======================================================================================
+// UNION ----> Union secara performance itu JELEK, jangan dipakai keculai terpaksa!!
+// =======================================================================================
+//class Program
+//{
+//    static void Main()
+//    {
+//        var people1 = new[]
+//        {
+//            new {Id = 1112, Name = "Hanafi", City = "Garut"},
+//            new {Id = 1113, Name = "Anton", City = "Bekasi"},
+//            new {Id = 1114, Name = "Andik", City = "Bukitinggi"},
+//            new {Id = 1115, Name = "Jimmy", City = "Cikarang"}
+//        };
+
+//        var people2 = new[]
+//       {
+//            new {Id = 1112, Name = "Hanafi", City = "Garut"},
+//            new {Id = 1113, Name = "Anton", City = "Bekasi"},
+//            new {Id = 1114, Name = "Andik", City = "Bukitinggi"},
+//            new {Id = 1115, Name = "Jimmy", City = "Cikarang"},
+//            new {Id = 1116, Name = "Bima", City = "Bukitinggi"},
+//            new {Id = 1117, Name = "Setiawan", City = "Padang"},
+//        };
+
+//        // SELECT * FROM TABLE_A
+//        // UNION
+//        // SELECT * FROM TABLE_A
+
+//        var people = people1.Union(people2);
+
+//        foreach (var item in people)
+//        {
+//            Console.WriteLine($"{item.Name} - {item.City}");
+//        }
+//    }
+//}
+
+
+// =======================================================================================
+// INTERSECT ----> secara performance itu JELEK, jangan dipakai keculai terpaksa!!
+// =======================================================================================
 class Program
 {
     static void Main()
     {
-        Recipe[] recipes =
+        var people1 = new[]
         {
-            new Recipe {Id = 1, Name = "Mashed Potato"},
-            new Recipe {Id = 2, Name = "Rendang"},
-            new Recipe {Id = 3, Name = "Sayur Anyang"}
+            new {Id = 1112, Name = "Hanafi", City = "Garut"},
+            new {Id = 1113, Name = "Anton", City = "Bekasi"},
+            new {Id = 1114, Name = "Andik", City = "Bukitinggi"},
+            new {Id = 1115, Name = "Jimmy", City = "Cikarang"}
         };
 
-        Review[] reviews =
-        {
-            new Review {RecipeId = 1, ReviewText = "Tasty!"},
-            new Review {RecipeId = 2, ReviewText = "Bad :("},
-            new Review {RecipeId = 2, ReviewText = "Terlalu Asin"},
-            new Review {RecipeId = 1, ReviewText = "Loved it!"},
-            new Review {RecipeId = 3, ReviewText = "Loved it!"}
+        var people2 = new[]
+       {
+            new {Id = 1112, Name = "Hanafi", City = "Garut"},
+            new {Id = 1113, Name = "Anton", City = "Bekasi"},
+            new {Id = 1114, Name = "Andik", City = "Bukitinggi"},
+            new {Id = 1115, Name = "Jimmy", City = "Cikarang"},
+            new {Id = 1116, Name = "Bima", City = "Bukitinggi"},
+            new {Id = 1117, Name = "Setiawan", City = "Padang"},
         };
 
-        // SELECT RecipeName, RecipeReview FROM Recipe
-        // JOIN Review ON Recipe.Id = Review.RecipeId
-        var query = from recipe in recipes
-                    join review in reviews on recipe.Id equals review.RecipeId
-                    select new // SELECT Fields
-                    {
-                        RecipeName = recipe.Name,
-                        RecipeReview = review.ReviewText
-                    };
+        // SELECT * FROM TABLE_A
+        // INTERSACET  ---------------> BERIRISAN
+        // SELECT * FROM TABLE_A
 
-        foreach (var item in query)
+        var people = people1.Intersect(people2);
+
+        foreach (var item in people)
         {
-            Console.WriteLine("{0} - '{1}'", item.RecipeName, item.RecipeReview);
+            Console.WriteLine($"{item.Name} - {item.City}");
         }
     }
 }
 
-class Recipe
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-}
-
-class Review
-{
-    public int RecipeId { get; set; }
-    public string ReviewText { get; set; }
-}
