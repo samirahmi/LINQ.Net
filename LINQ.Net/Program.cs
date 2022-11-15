@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 //class Program
 //{
@@ -210,40 +211,158 @@ using System.Linq.Expressions;
 //    public List<string> Subject { get; set; }
 //}
 
-// CONTOH 2
-class Program
-{
-    static void Main()
-    {
-        List<Student> students = new List<Student>()
-        {
-            new Student(){ StudentId = 1, Name = "Sami", Gender = "Female", 
-                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
-            new Student(){ StudentId = 1, Name = "Garaa", Gender = "Male", 
-                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
-            new Student(){ StudentId = 3, Name = "Kabuto", Gender = "Male",
-                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
-            new Student(){ StudentId = 2, Name = "Raya", Gender = "Female",
-                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
-            new Student(){ StudentId = 2, Name = "Didit", Gender = "Female",
-                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
-        };
+// CONTOH 2 SORTING
+//class Program
+//{
+//    static void Main()
+//    {
+//        List<Student> students = new List<Student>()
+//        {
+//            new Student(){ StudentId = 1, Name = "Sami", Gender = "Female", 
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//            new Student(){ StudentId = 1, Name = "Garaa", Gender = "Male", 
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//            new Student(){ StudentId = 3, Name = "Kabuto", Gender = "Male",
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//            new Student(){ StudentId = 2, Name = "Raya", Gender = "Female",
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//            new Student(){ StudentId = 2, Name = "Didit", Gender = "Female",
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//            new Student(){ StudentId = 5, Name = "Lili", Gender = "Female",
+//                Subject = new List<string>{ "Web Design", "Fisika Dasar"} },
+//        };
 
-        // Sorting berdasarkan studentId, dilanjut oleh ThenBy yang diurutkan ASC / ThenByDescending diurutkan DESC
-        // SELECT * FROM Student Order by StudentId AND Name
-        var studentSorted = students.OrderBy(x => x.StudentId).ThenBy(x => x.Name);
-        //var studentSorted = students.OrderByDescending(x => x.StudentId).ThenByDescending(x => x.Name);
-        foreach (var student in studentSorted)
-        {
-            Console.WriteLine($"{student.StudentId} - {student.Name} - {student.Subject[0]} - {student.Subject[1]}");
-        }
-    }
-}
+//        // Sorting berdasarkan studentId, dilanjut oleh ThenBy yang diurutkan ASC / ThenByDescending diurutkan DESC
+//        // SELECT * FROM Student Order by StudentId AND Name
+//        var studentSorted = students.OrderBy(x => x.StudentId).ThenBy(x => x.Name);
+//        //var studentSorted = students.OrderByDescending(x => x.StudentId).ThenByDescending(x => x.Name);
+//        foreach (var student in studentSorted)
+//        {
+//            Console.WriteLine($"{student.StudentId} - {student.Name} - {student.Subject[0]} - {student.Subject[1]}");
+//        }
+//    }
+//}
 
-class Student
-{
-    public int StudentId { get; set; } 
-    public string Name { get; set; }
-    public string Gender { get; set; }
-    public List<string> Subject { get; set; }
-}
+//class Student
+//{
+//    public int StudentId { get; set; } 
+//    public string Name { get; set; }
+//    public string Gender { get; set; }
+//    public List<string> Subject { get; set; }
+//}
+
+
+// PARTITION QUERY, SKO, TAKE, dan TAKEWHILE
+// =======================================================================================
+// CONTOH 1
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] countries = { "India", "USA", "Indonesia", "Turki", "Polandia" };
+
+//        // SELECT * FROM Countries LIMIT 3
+//        //IEnumerable<string> result = countries.Take(3); //cara 1
+//        IEnumerable<string> result = (from x in countries select x).Take(4); // cara 2 x didalam cuntries
+//        foreach(var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Argentina" };
+
+//        // SELECT * FROM Countries LIMIT 3
+//        // TAKEWHILE STARTSWITH akan mengambil value string dgn kriteria tapi jika dia false langsung exit takewhile
+//        IEnumerable<string> result = countries.TakeWhile(x => x.StartsWith("U"));
+//        //IEnumerable<string> result = countries.TakeWhile((country, index) => country.Length >= index);
+//        foreach (var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] countries = { "India", "USA", "Indonesia", "Turki", "Polandia" };
+
+//        // SELECT * FROM (
+//        // SELECT ROW_NUMBER() OVER(ORDER BY Country) as RowNum FROM Countries)
+//        // AS Tbl WHERE Country < RowNum
+//        IEnumerable<string> result = countries.Skip(3);
+//        foreach (var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] fruits = { "apple", "passionfruit", "banana", "mango",
+//                      "orange", "blueberry", "grape", "strawberry" };
+
+//        IEnumerable<string> query =
+//            fruits.TakeWhile((fruit, index) => fruit.Length >= index);
+
+//        foreach (string fruit in query)
+//        {
+//            Console.WriteLine(fruit);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Argentina",
+//        "England", "Qatar", "Poland", "Korea Utara"};
+
+//        // SELECT 8 FROM Countries
+//        // ORDER BY [Field]
+//        // OFFSET 3 ROWS --------> SKIP
+//        // FETCH NEXT 5 ROWS ONLY ---------------> TAKE
+//        IEnumerable<string> result = (from x in countries select x).Skip(3).Take(5).OrderBy(x => x);
+
+//        foreach(var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
+
+//class Program
+//{
+//    static void Main()
+//    {
+//        string[] countries = { "USA", "UK", "France", "NKRI", "Australia", "Korea Selatan",
+//            "Poland", "Qatar", "Japan" };
+
+//        // SELECT 8 FROM Countries
+//        // WHERE Fields Like '%a%' ----------> WHERE.CONTAINS
+//        // ORDER BY [Field] DESC ----------> ORDERBYDESCENDING
+//        // OFFSET 3 ROWS --------> SKIP
+//        // FETCH NEXT 5 ROWS ONLY ---------------> TAKE
+
+//        IEnumerable<string> result = (from x in countries select x)
+//            .Skip(3)
+//            .Take(5)
+//            .Where(x => x.Contains("a"))
+//            .OrderByDescending(x => x);
+//        foreach(var country in result)
+//        {
+//            Console.WriteLine(country);
+//        }
+//    }
+//}
